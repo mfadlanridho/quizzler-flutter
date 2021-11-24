@@ -1,3 +1,5 @@
+import 'dart:ffi';
+import 'quiz_brain.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(Quizzler());
@@ -25,66 +27,116 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  List<Icon> scoreCountIcons = [];
+  QuizBrain quizBrain = QuizBrain();
+
+  Icon correctIcon() {
+    return Icon(
+      Icons.check,
+      color: Colors.green,
+    );
+  }
+
+  Icon falseIcon() {
+    return Icon(
+      Icons.close,
+      color: Colors.red,
+    );
+  }
+
+  void answerCurrentQuestionAndContinue(bool chosenAnswer) {
+    setState(() {
+      scoreCountIcons.add(chosenAnswer == quizBrain.getCorrectAnswer()
+          ? correctIcon()
+          : falseIcon());
+    });
+    if (!quizBrain.continueQuestion()) {
+      quizBrain.reset();
+      scoreCountIcons = [];
+    }
+  }
+
+  String getCurrentQuestion() {
+    return quizBrain.getQuestion();
+  }
+
+  Widget questionWidget() {
+    return Expanded(
+      flex: 5,
+      child: Padding(
+        padding: EdgeInsets.all(10.0),
+        child: Center(
+          child: Text(
+            getCurrentQuestion(),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 25.0,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget correctAnswerWidget() {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: TextButton(
+          child: Text(
+            'True',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20.0,
+            ),
+          ),
+          onPressed: () => answerCurrentQuestionAndContinue(true),
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.green,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget falseAnswerWidget() {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: TextButton(
+          child: Text(
+            'False',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20.0,
+            ),
+          ),
+          onPressed: () => answerCurrentQuestionAndContinue(false),
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.red,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Row answerRow() {
+    return Row(
+      children: scoreCountIcons,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Expanded(
-          flex: 5,
-          child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Center(
-              child: Text(
-                'This is where the question text will go.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 25.0,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: FlatButton(
-              textColor: Colors.white,
-              color: Colors.green,
-              child: Text(
-                'True',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
-                ),
-              ),
-              onPressed: () {
-                //The user picked true.
-              },
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: FlatButton(
-              color: Colors.red,
-              child: Text(
-                'False',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white,
-                ),
-              ),
-              onPressed: () {
-                //The user picked false.
-              },
-            ),
-          ),
-        ),
-        //TODO: Add a Row here as your score keeper
+      children: [
+        questionWidget(),
+        correctAnswerWidget(),
+        falseAnswerWidget(),
+        answerRow(),
       ],
     );
   }
