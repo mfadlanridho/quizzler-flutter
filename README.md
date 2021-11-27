@@ -1,6 +1,4 @@
 
-## This project is part of Udemy Flutter Bootcamp Project
-
 In this project, I implemented  Stateful and Stateless Widgets as well as learning about the fundamental building blocks of Object Oriented Programming (OOP) - Classes and Objects using dart with Flutter.
 
 ## What is this app
