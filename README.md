@@ -5,7 +5,10 @@ In this project, I implemented  Stateful and Stateless Widgets as well as learni
 
 This is a quiz app that tests your general knowledge. As one of the most popular types of apps on the app stores, you can create your own quiz for other people to enjoy!
 
-## What i learned
+![Finished App](https://github.com/londonappbrewery/Images/blob/master/quizzler-demo.gif)
+
+
+## What I learned
 
 - Modularising code into separate classes.
 - Dart classes and objects.
